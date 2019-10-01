@@ -28,7 +28,7 @@ public class TaskRepository {
 
     public void save(Task task) {
         transaction.begin();
-        manager.persist(tasks.add(task));
+        manager.persist(task);
         transaction.commit();
     }
 

@@ -23,18 +23,23 @@ public class TaskController {
         this.repository = repository;
     }
 
-    @GetMapping("/tasks")
-    public String getAll(@RequestParam TaskStatus status, Model model) {
-        tasks = repository.getByStatus(status);
-
+    @GetMapping("/")
+    public String getAll(Model model) {
+        tasks = repository.getAll();
         model.addAttribute("tasks", tasks);
         repository.close();
-        return "tasks";
+        return "index";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestParam String title, @RequestParam(required = false) String description,
-                      @RequestParam TaskCategory category, @RequestParam TaskStatus status) {
+    @GetMapping("/add")
+    public String add(Model model) {
+        model.addAttribute("task", new Task());
+        return "add";
+    }
+
+    @PostMapping("/save")
+    public String save(@RequestParam String title, @RequestParam(required = false) String description,
+                       @RequestParam TaskCategory category, @RequestParam TaskStatus status) {
         Task task;
 
         if (!(isParamEmpty(title, category, status))) {
@@ -43,12 +48,20 @@ public class TaskController {
                 repository.save(task);
                 return "redirect:/success";
             } else {
-                task = new Task(title, category, status);
+                task = new Task(title, description, category, status);
                 repository.save(task);
                 return "redirect:/success";
             }
         }
+        repository.close();
         return "redirect:/err";
+    }
+
+    @GetMapping("/status")
+    public String getByStatus(@RequestParam TaskStatus status, Model model) {
+        tasks = repository.getByStatus(status);
+        model.addAttribute("taskByStatus", tasks);
+        return "tasks";
     }
 
     private boolean isParamEmpty(String title, TaskCategory category, TaskStatus status) {

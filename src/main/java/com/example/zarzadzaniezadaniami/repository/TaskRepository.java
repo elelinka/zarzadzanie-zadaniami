@@ -43,17 +43,25 @@ public class TaskRepository {
 
     public List<Task> getByStatus(TaskStatus status) {
         transaction.begin();
-        List<Task> allTasks = getAll();
-        allTasks.stream()
-                .filter(Objects::nonNull)
-                .filter(task -> task.getStatus().equals(status))
-                .collect(Collectors.toList());
+        Query query = manager.createQuery("SELECT t FROM Task t WHERE t.status = " + status);
+        tasks = query.getResultList();
         transaction.commit();
 
-        return allTasks;
+        return tasks;
     }
 
-    public void updateStatus(long id) {
+    public Task getById(long id) {
+        Task task = null;
+        transaction.begin();
+        Query query = manager.createQuery("SELECT t FROM Task t WHERE t.id = " + id);
+        for (Object o : query.getResultList()) {
+            task = (Task) o;
+        }
+        transaction.commit();
+        return task;
+    }
+
+    public void updateStatusToDone(long id) {
         transaction.begin();
         manager.createQuery("UPDATE Task t SET t.status = " + TaskStatus.DONE + " WHERE t.id = " + id);
         transaction.commit();

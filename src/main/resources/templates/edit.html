@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Lista zadań</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
@@ -14,7 +14,7 @@
             padding: 30px;
         }
 
-        .add-form {
+        .task-list {
             margin-left: 50px;
             margin-right: 50px;
         }
@@ -43,32 +43,25 @@
     </div>
 </nav>
 
-<div class="add-form">
-    <h3>Utwórz nowe zadanie</h3>
-
-    <form th:action="@{/save}" method="post" th:object="${task}">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="Tytuł" th:field="*{title}">
-        </div>
-        <div class="form-group">
-            <label for="exampleFormControlTextarea1">Opis</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                      th:field="*{description}"></textarea>
-        </div>
-        <select class="form-control" id="selectCategory" th:field="*{category}">
-            <option value="OTHER">Wybierz kategorię...</option>
-            <option value="HOME">obowiązki domowe</option>
-            <option value="WORK">praca</option>
-            <option value="WORKOUT">trening</option>
-            <option value="OTHER">pozostałe</option>
-        </select><br>
-        <select class="form-control" id="selectCategory2" th:field="*{status}">
-            <option value="TO_DO">Wybierz status...</option>
-            <option value="DONE">zrobione</option>
-            <option value="TO_DO">do zrobienia</option>
-        </select><br>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<div class="task-list">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Kategoria</th>
+            <th scope="col">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${taskById.getId()}"></td>
+            <td th:text="${taskById.getTitle()}"></td>
+            <td th:text="${taskById.getCategory().getName()}"></td>
+            <td th:text="${taskById.getStatus().getName()}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 </body>

@@ -24,10 +24,16 @@ public class TaskController {
     }
 
     @GetMapping("/")
-    public String getAll(Model model) {
-        tasks = repository.getAll();
-        model.addAttribute("tasks", tasks);
-        return "index";
+    public String getAll(@RequestParam(required = false) TaskStatus status, Model model) {
+        if (StringUtils.isEmpty(status)) {
+            tasks = repository.getAll();
+            model.addAttribute("tasks", tasks);
+            return "index";
+        } else {
+            tasks = repository.getByStatus(status);
+            model.addAttribute("tasksByStatus", tasks);
+            return "tasks";
+        }
     }
 
     @GetMapping("/add")
@@ -53,13 +59,6 @@ public class TaskController {
             }
         }
         return "redirect:/err";
-    }
-
-    @GetMapping("/status")
-    public String getByStatus(@RequestParam TaskStatus status, Model model) {
-        tasks = repository.getByStatus(status);
-        model.addAttribute("tasksByStatus", tasks);
-        return "tasks";
     }
 
     @GetMapping("/task")
